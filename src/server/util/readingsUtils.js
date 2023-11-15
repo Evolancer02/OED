@@ -184,8 +184,20 @@ const unitDatakWh = [
         displayable: Unit.displayableType.NONE,
         preferredDisplay: false,
         note: 'special unit'
+    },
+    {
+        name: 'MJ',
+        identifier: 'megaJoules',
+        unitRepresent: Unit.unitRepresentType.QUANTITY,
+        secInRate: 3600,
+        typeOfUnit: Unit.unitType.UNIT,
+        suffix: '',
+        displayable: Unit.displayableType.ALL,
+        preferredDisplay: false,
+        note: 'MJ'
     }
 ];
+
 const conversionDatakWh = [
     {
         sourceName: 'Electric_Utility',
@@ -194,6 +206,14 @@ const conversionDatakWh = [
         slope: 1,
         intercept: 0,
         note: 'Electric_Utility → kWh'
+    },
+    {
+        sourceName: 'kWh',
+        destinationName: 'MJ',
+        bidirectional: true,
+        slope: 3.6,
+        intercept: 0,
+        note: 'kWh → MJ'
     }
 ];
 const meterDatakWh = [
@@ -209,7 +229,7 @@ const meterDatakWh = [
         readingFrequency: '15 minutes',
         // Note the meter ID is set so we know what to expect when a query is made.
         id: METER_ID
-    }
+    },
 ];
 
 module.exports = {
