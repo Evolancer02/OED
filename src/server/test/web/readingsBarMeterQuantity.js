@@ -8,6 +8,7 @@
 */
 
 const { chai, mocha, expect, app } = require('../common');
+const Unit = require('../../models/Unit');
 const { prepareTest,
     parseExpectedCsv,
     expectReadingToEqualExpected,
@@ -100,8 +101,48 @@ mocha.describe('readings API', () => {
                 // Add B7 here
 
                 mocha.it('B8: 1 day bars for 15 minute reading intervals and quantity units with +-inf start/end time & kWh as MJ', async () => {
+                    // u3
+                    const unitData = unitDatakWh.concat([
+                        { 
+                            name: 'MJ', 
+                            identifier: 'megaJoules', 
+                            unitRepresent: Unit.unitRepresentType.QUANTITY, 
+                            secInRate: 3600, 
+                            typeOfUnit: Unit.unitType.UNIT, 
+                            suffix: '', 
+                            displayable: Unit.displayableType.ALL, 
+                            preferredDisplay: false, 
+                            note: 'MJ'
+                        }
+                    ]);
+                    // c2
+                    const conversionData = conversionDatakWh.concat([
+                        { 
+                            sourceName: 'kWh', 
+                            destinationName: 'MJ', 
+                            bidirectional: true, 
+                            slope: 3.6, 
+                            intercept: 0, 
+                            note: 'kWh → MJ' 
+                        }
+                    ]);
+                    const meterData = [
+                        {
+                            name: 'Electric Utility MJ',
+                            unit: 'Electric_Utility',
+                            defaultGraphicUnit: 'MJ',
+                            displayable: true,
+                            gps: undefined,
+                            note: 'special meter',
+                            file: 'test/web/readingsData/readings_ri_15_days_75.csv',
+                            deleteFile: false,
+                            readingFrequency: '15 minutes',
+                            id: METER_ID
+                        }
+                    ];
+
                     // Load the data into the database
-                    await prepareTest(unitDatakWh, conversionDatakWh, meterDatakWh);
+                    await prepareTest(unitData, conversionData, meterData);
                     // Get the unit ID since the DB could use any value.
                     const unitId = await getUnitId('MJ');
                     // Load the expected response data from the corresponding csv file
